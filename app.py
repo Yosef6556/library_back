@@ -1,6 +1,6 @@
 import json
 from xmlrpc.client import Boolean
-from flask import Flask, request
+from flask import Flask, request, render_template
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, ForeignKey, Date, CheckConstraint
 from sqlalchemy.orm import relationship
@@ -47,7 +47,7 @@ class Customer(db.Model):
 
 @app.route('/')
 def hello():
-    return "wellcom home"
+    return render_template('index.html')
 
 
 @app.route("/customers")
