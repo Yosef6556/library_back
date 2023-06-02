@@ -1,6 +1,6 @@
 import json
 from xmlrpc.client import Boolean
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, String, Integer, ForeignKey, Date, CheckConstraint
 from sqlalchemy.orm import relationship
@@ -55,6 +55,19 @@ def cust_show():
     cust_list = [customer.to_dict() for customer in Customer.query.all()]
     json_data = json.dumps(cust_list)
     return json_data
+
+
+@app.route("/customers/update/<int:id>", methods=['PUT'])
+def cust_update(id):
+    customer = Customer.query.get(id)
+    if customer:
+        data = request.get_json()
+        customer.name = data.get('name', customer.name)
+        customer.city = data.get('city', customer.city)
+        customer.age = data.get('age', customer.age)
+        db.session.commit()
+        return jsonify({'message': 'Customer updated successfully'})
+    return jsonify({'message': 'Customer not found'})
 
 
 @app.route('/customers/search/<string:name>', methods=['GET'])
