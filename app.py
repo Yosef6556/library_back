@@ -144,6 +144,20 @@ def book_show():
     return json_data
 
 
+@app.route("/books/update/<int:id>", methods=['PUT'])
+def book_update(id):
+    book = Book.query.get(id)
+    if book:
+        data = request.get_json()
+        book.bookname = data.get('bookname', book.bookname)
+        book.writer = data.get('writer', book.writer)
+        book.year_published = data.get('year_published', book.year_published)
+        book.book_loan = data.get('book_loan', book.book_loan)
+        db.session.commit()
+        return jsonify({'message': 'Book updated successfully'})
+    return jsonify({'message': 'Book not found'})
+
+
 @app.route('/books/new', methods=['POST'])
 def newbook():
     data = request.get_json()
